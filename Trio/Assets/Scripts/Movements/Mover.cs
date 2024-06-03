@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -9,6 +10,14 @@ public class Mover : MonoBehaviour
     private Rigidbody2D rb;
     [SerializeField]
     private float MoveSpeed;
+    [SerializeField]
+    private float JumpHeight;
+    [SerializeField]
+    private Transform Groundcheck;
+    [SerializeField]
+    private LayerMask GroundLayer;
+    [SerializeField]
+    private bool isGrounded;
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -24,16 +33,32 @@ public class Mover : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        GroundChecker();
     }
     private void FixedUpdate()
     {
         Move();
+        Jump();
     }
-    public void Move()
+    private void Move()
     {
         Vector2 InputAxis = inputActions.Player.Mover.ReadValue<Vector2>();
-        rb.AddForce(new Vector2(InputAxis.x, InputAxis.y) * MoveSpeed, ForceMode2D.Force);
-        Debug.Log("Arrows pressed");
+        rb.velocity = new Vector2(InputAxis.x, 0f) * MoveSpeed;
+    }
+    private void Jump()
+    {
+        if (inputActions.Player.Jump.IsPressed() && isGrounded)
+        {
+            rb.AddForce(Vector2.up * JumpHeight, ForceMode2D.Impulse);
+        }
+        else
+        {
+            isGrounded = false;
+        }
+        
+    }
+    private void GroundChecker()
+    {
+        isGrounded = Physics2D.Raycast(Groundcheck.position, Vector2.down * 0.1f, GroundLayer);
     }
 }
