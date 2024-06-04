@@ -15,7 +15,6 @@ public class Mover : MonoBehaviour
     private Transform Groundcheck;
     [SerializeField]
     private LayerMask GroundLayer;
-    [SerializeField]
     private bool isGrounded = false;
     [SerializeField]
     private float GroundCheckRadius;

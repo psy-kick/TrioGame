@@ -135,7 +135,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 9.8
+  m_GravityScale: 3
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -160,12 +160,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MoveSpeed: 5
-  JumpHeight: 5
-  Groundcheck: {fileID: 0}
+  JumpHeight: 15
+  Groundcheck: {fileID: 4749375781195060132}
   GroundLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 8
   isGrounded: 0
+  GroundCheckRadius: 0.3
 --- !u!1 &2266622699262966936
 GameObject:
   m_ObjectHideFlags: 0
