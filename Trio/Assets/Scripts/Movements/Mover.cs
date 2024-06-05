@@ -20,10 +20,13 @@ public class Mover : MonoBehaviour
     private float GroundCheckRadius;
     private bool isFacingRight = true;
     private Vector2 InputAxis;
+    private Animator anim;
+    private bool isRunning;
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         inputActions = new InputActions();
+        anim = GetComponent<Animator>();
         inputActions.Player.Enable();
     }
     // Start is called before the first frame update
@@ -43,6 +46,14 @@ public class Mover : MonoBehaviour
         {
             Flip();
         }
+        if(rb.velocity.x != 0)
+        {
+            isRunning = true;
+        }
+        else
+        {
+            isRunning = false;
+        }
         GroundChecker();
     }
     private void FixedUpdate()
@@ -54,13 +65,21 @@ public class Mover : MonoBehaviour
     {
         InputAxis = inputActions.Player.Mover.ReadValue<Vector2>();
         rb.velocity = new Vector2(InputAxis.x * MoveSpeed, rb.velocity.y);
+        anim.SetBool("isRunning", isRunning);
     }
     private void Jump()
     {
         if (inputActions.Player.Jump.IsPressed() && isGrounded)
         {
             rb.velocity = new Vector2(rb.velocity.x, JumpHeight);
-        }        
+            anim.SetBool("Jump", true);
+            anim.SetFloat("yVel", rb.velocity.y);
+        }
+        else
+        {
+            anim.SetFloat("yVel", rb.velocity.y);
+            anim.SetBool("Jump", false);
+        }
     }
     private void GroundChecker()
     {
