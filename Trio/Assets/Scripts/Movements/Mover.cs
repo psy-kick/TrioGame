@@ -22,12 +22,20 @@ public class Mover : MonoBehaviour
     private Vector2 InputAxis;
     private Animator anim;
     private bool isRunning;
+    private float LastClickedTime;
+    private float LastComboEnd;
+    private int ComboCounter;
+    [SerializeField]
+    private List<AttackAnimCombo> Combos;
+    private Animator AttackAnim;
+    
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         inputActions = new InputActions();
         anim = GetComponent<Animator>();
         inputActions.Player.Enable();
+        AttackAnim = GetComponent<Animator>();
     }
     // Start is called before the first frame update
     void Start()
@@ -55,6 +63,11 @@ public class Mover : MonoBehaviour
             isRunning = false;
         }
         GroundChecker();
+        if (inputActions.Player.Attack.IsPressed())
+        {
+            Attack();
+        }
+        ExitAttack();
     }
     private void FixedUpdate()
     {
@@ -91,5 +104,36 @@ public class Mover : MonoBehaviour
         Vector3 LocalScale = transform.localScale;
         LocalScale.x *= -1f;
         transform.localScale = LocalScale;
+    }
+    private void Attack()
+    {
+        if (Time.time - LastComboEnd > 0.2f && ComboCounter <= Combos.Count)
+        {
+            CancelInvoke("EndCombo");
+            if (Time.time - LastClickedTime >= 0.1f)
+            {
+                AttackAnim.runtimeAnimatorController = Combos[ComboCounter].animatorOverrideController;
+                AttackAnim.Play("Attack", 0, 0);
+                //set the damage here
+                ComboCounter++;
+                LastClickedTime = Time.time;
+                if(ComboCounter+1 > Combos.Count)
+                {
+                    ComboCounter = 0;
+                }
+            }
+        }
+    }
+    private void ExitAttack()
+    {
+        if(AttackAnim.GetCurrentAnimatorStateInfo(0).normalizedTime>0.95 && AttackAnim.GetCurrentAnimatorStateInfo(0).IsTag("Attack"))
+        {
+            Invoke("EndCombo", 1);
+        }
+    }
+    private void EndCombo()
+    {
+        ComboCounter = 0;
+        LastComboEnd = Time.time;
     }
 }
