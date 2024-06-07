@@ -25,8 +25,7 @@ public class Mover : MonoBehaviour
     private float LastClickedTime;
     private float LastComboEnd;
     private int ComboCounter;
-    [SerializeField]
-    private List<AttackAnimCombo> Combos;
+    public Queue<AttackAnimCombo> Combos;
     private Animator AttackAnim;
     
     private void Awake()
@@ -36,11 +35,12 @@ public class Mover : MonoBehaviour
         anim = GetComponent<Animator>();
         inputActions.Player.Enable();
         AttackAnim = GetComponent<Animator>();
+        Combos = new Queue<AttackAnimCombo>();
     }
     // Start is called before the first frame update
     void Start()
     {
-        
+        AddToQueue();
     }
 
     // Update is called once per frame
@@ -105,35 +105,42 @@ public class Mover : MonoBehaviour
         LocalScale.x *= -1f;
         transform.localScale = LocalScale;
     }
+    private void AddToQueue()
+    {
+        foreach(var combo in Combos)
+        {
+            Combos.Enqueue(combo);
+        }
+    }
     private void Attack()
     {
-        if (Time.time - LastComboEnd > 0.2f && ComboCounter <= Combos.Count)
-        {
-            CancelInvoke("EndCombo");
-            if (Time.time - LastClickedTime >= 0.1f)
-            {
-                AttackAnim.runtimeAnimatorController = Combos[ComboCounter].animatorOverrideController;
-                AttackAnim.Play("Attack", 0, 0);
-                //set the damage here
-                ComboCounter++;
-                LastClickedTime = Time.time;
-                if(ComboCounter+1 > Combos.Count)
-                {
-                    ComboCounter = 0;
-                }
-            }
-        }
+        //if (Time.time - LastComboEnd > 0.2f && ComboCounter <= Combos.Count)
+        //{
+        //    CancelInvoke("EndCombo");
+        //    if (Time.time - LastClickedTime >= 0.1f)
+        //    {
+        //        AttackAnim.runtimeAnimatorController = Combos[ComboCounter].animatorOverrideController;
+        //        AttackAnim.Play("Attack", 0, 0);
+        //        //set the damage here
+        //        ComboCounter++;
+        //        LastClickedTime = Time.time;
+        //        if(ComboCounter+1 > Combos.Count)
+        //        {
+        //            ComboCounter = 0;
+        //        }
+        //    }
+        //}
     }
     private void ExitAttack()
     {
-        if(AttackAnim.GetCurrentAnimatorStateInfo(0).normalizedTime>0.95 && AttackAnim.GetCurrentAnimatorStateInfo(0).IsTag("Attack"))
-        {
-            Invoke("EndCombo", 1);
-        }
+        //if (AttackAnim.GetCurrentAnimatorStateInfo(0).normalizedTime > 0.95 && AttackAnim.GetCurrentAnimatorStateInfo(0).IsTag("Attack"))
+        //{
+        //    Invoke("EndCombo", 0.2f);
+        //}
     }
     private void EndCombo()
     {
-        ComboCounter = 0;
-        LastComboEnd = Time.time;
+        //ComboCounter = 0;
+        //LastComboEnd = Time.time;
     }
 }
