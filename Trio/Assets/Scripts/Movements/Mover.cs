@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 public class Mover : MonoBehaviour
@@ -26,8 +27,9 @@ public class Mover : MonoBehaviour
     private float LastComboEnd;
     private int ComboCounter;
     public Queue<AttackAnimCombo> Combos;
+    public List<AttackAnimCombo> Actions;
     private Animator AttackAnim;
-    
+
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -35,14 +37,12 @@ public class Mover : MonoBehaviour
         anim = GetComponent<Animator>();
         inputActions.Player.Enable();
         AttackAnim = GetComponent<Animator>();
-        Combos = new Queue<AttackAnimCombo>();
     }
     // Start is called before the first frame update
     void Start()
     {
-        AddToQueue();
+        Combos = new Queue<AttackAnimCombo>(Actions);
     }
-
     // Update is called once per frame
     void Update()
     {
@@ -104,13 +104,6 @@ public class Mover : MonoBehaviour
         Vector3 LocalScale = transform.localScale;
         LocalScale.x *= -1f;
         transform.localScale = LocalScale;
-    }
-    private void AddToQueue()
-    {
-        foreach(var combo in Combos)
-        {
-            Combos.Enqueue(combo);
-        }
     }
     private void Attack()
     {
