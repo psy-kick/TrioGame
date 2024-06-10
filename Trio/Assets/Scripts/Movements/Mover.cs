@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using System.Threading;
+using System.Threading.Tasks;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -26,9 +28,11 @@ public class Mover : MonoBehaviour
     private float LastClickedTime;
     private float LastComboEnd;
     private int ComboCounter;
-    public Queue<AttackAnimCombo> Combos;
+    private int AttackCounter;
     public List<AttackAnimCombo> Actions;
     private Animator AttackAnim;
+    private Task AttackTasks;
+    private CancellationTokenSource token;
 
     private void Awake()
     {
@@ -41,7 +45,7 @@ public class Mover : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Combos = new Queue<AttackAnimCombo>(Actions);
+        token = new CancellationTokenSource();
     }
     // Update is called once per frame
     void Update()
@@ -65,7 +69,7 @@ public class Mover : MonoBehaviour
         GroundChecker();
         if (inputActions.Player.Attack.IsPressed())
         {
-            Attack();
+            Task.Run(StartCombo);
         }
         ExitAttack();
     }
@@ -105,7 +109,7 @@ public class Mover : MonoBehaviour
         LocalScale.x *= -1f;
         transform.localScale = LocalScale;
     }
-    private void Attack()
+    private async Task Attack(AttackAnimCombo AttackCombo)
     {
         //if (Time.time - LastComboEnd > 0.2f && ComboCounter <= Combos.Count)
         //{
@@ -123,6 +127,32 @@ public class Mover : MonoBehaviour
         //        }
         //    }
         //}
+        Debug.Log("Attack");
+        token.Cancel();
+    }
+    private async Task Combo()
+    {
+        await Task.Run(()=>
+        {
+            for (int i = 0; i < Actions.Count; i++)
+            {
+                AttackTasks = Attack(Actions[i]);
+            }
+            if (token.IsCancellationRequested)
+            {
+                return;
+            }
+        },token.Token);
+        if (token.IsCancellationRequested)
+        {
+            Debug.Log("Task was cancelled");
+        }
+        await AttackTasks;
+        Debug.Log("Attack Done");
+    }
+    private async void StartCombo()
+    {
+        await Combo();
     }
     private void ExitAttack()
     {
