@@ -127,6 +127,7 @@ public class Mover : MonoBehaviour
         //        }
         //    }
         //}
+        anim.SetBool("Jump",true);
         Debug.Log("Attack");
         token.Cancel();
     }
