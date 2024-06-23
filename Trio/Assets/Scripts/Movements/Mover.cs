@@ -48,7 +48,7 @@ public class Mover : MonoBehaviour
         token = new CancellationTokenSource();
     }
     // Update is called once per frame
-    void Update()
+    async void Update()
     {
         if (!isFacingRight && InputAxis.x > 0)
         {
@@ -69,7 +69,7 @@ public class Mover : MonoBehaviour
         GroundChecker();
         if (inputActions.Player.Attack.IsPressed())
         {
-            Task.Run(StartCombo);
+            Combo();
         }
         ExitAttack();
     }
@@ -109,7 +109,7 @@ public class Mover : MonoBehaviour
         LocalScale.x *= -1f;
         transform.localScale = LocalScale;
     }
-    private async Task Attack(AttackAnimCombo AttackCombo)
+    private async Task Attack(AttackAnimCombo AttackCombo,CancellationToken token)
     {
         //if (Time.time - LastComboEnd > 0.2f && ComboCounter <= Combos.Count)
         //{
@@ -127,33 +127,41 @@ public class Mover : MonoBehaviour
         //        }
         //    }
         //}
-        anim.SetBool("Jump",true);
-        Debug.Log("Attack");
-        token.Cancel();
+        if(token.IsCancellationRequested)
+        {
+            return;
+        }
+        anim.Play("Attack");
+        await Task.Delay(5000);
     }
     private async Task Combo()
     {
-        await Task.Run(()=>
+        Task AttackTask1 = Attack(Actions[0], token.Token);
+        Task AttackTask2 = Attack(Actions[1], token.Token);
+        Task AttackTask3 = Attack(Actions[2], token.Token);
+        //for (int i = 0; i < Actions.Count; i++)
+        //{
+        //    AttackTasks = Attack(Actions[i]);
+        //}
+        if (token.IsCancellationRequested)
         {
-            for (int i = 0; i < Actions.Count; i++)
-            {
-                AttackTasks = Attack(Actions[i]);
-            }
-            if (token.IsCancellationRequested)
-            {
-                return;
-            }
-        },token.Token);
+            return;
+        }
         if (token.IsCancellationRequested)
         {
             Debug.Log("Task was cancelled");
         }
-        await AttackTasks;
-        Debug.Log("Attack Done");
-    }
-    private async void StartCombo()
-    {
-        await Combo();
+        if (Time.time - LastClickedTime >= 0.1f)
+        {
+            await AttackTask1;
+            await AttackTask2;
+            await AttackTask3;
+            LastClickedTime = Time.time;
+        }
+        else
+        {
+            token.Cancel();
+        }
     }
     private void ExitAttack()
     {
