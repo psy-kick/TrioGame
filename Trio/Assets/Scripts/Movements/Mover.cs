@@ -1,13 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
+using Unity.Burst.Intrinsics;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 public class Mover : MonoBehaviour
 {
+    #region Private Variables
     private InputActions inputActions;
     private Rigidbody2D rb;
     [SerializeField]
@@ -29,10 +32,13 @@ public class Mover : MonoBehaviour
     private float LastComboEnd;
     private int ComboCounter;
     private int AttackCounter;
-    public List<AttackAnimCombo> Actions;
-    private Animator AttackAnim;
-    private Task AttackTasks;
-    private CancellationTokenSource token;
+    [SerializeField]
+    private List<AnimationSO> ComboOverrides;
+    #endregion
+
+    #region Public Variables
+
+    #endregion
 
     private void Awake()
     {
@@ -40,15 +46,14 @@ public class Mover : MonoBehaviour
         inputActions = new InputActions();
         anim = GetComponent<Animator>();
         inputActions.Player.Enable();
-        AttackAnim = GetComponent<Animator>();
     }
     // Start is called before the first frame update
     void Start()
     {
-        token = new CancellationTokenSource();
+
     }
     // Update is called once per frame
-    async void Update()
+    private void Update()
     {
         if (!isFacingRight && InputAxis.x > 0)
         {
@@ -67,10 +72,14 @@ public class Mover : MonoBehaviour
             isRunning = false;
         }
         GroundChecker();
-        if (inputActions.Player.Attack.IsPressed())
+        if (Input.GetKeyDown(KeyCode.LeftControl))
         {
-            Combo();
+            Attack();
         }
+        //else
+        //{
+        //    anim.SetBool("Attack", false);
+        //}
         ExitAttack();
     }
     private void FixedUpdate()
@@ -109,70 +118,46 @@ public class Mover : MonoBehaviour
         LocalScale.x *= -1f;
         transform.localScale = LocalScale;
     }
-    private async Task Attack(AttackAnimCombo AttackCombo,CancellationToken token)
+    private void Attack()
     {
-        //if (Time.time - LastComboEnd > 0.2f && ComboCounter <= Combos.Count)
+        //foreach(var combo in ComboOverrides)
         //{
-        //    CancelInvoke("EndCombo");
-        //    if (Time.time - LastClickedTime >= 0.1f)
-        //    {
-        //        AttackAnim.runtimeAnimatorController = Combos[ComboCounter].animatorOverrideController;
-        //        AttackAnim.Play("Attack", 0, 0);
-        //        //set the damage here
-        //        ComboCounter++;
-        //        LastClickedTime = Time.time;
-        //        if(ComboCounter+1 > Combos.Count)
-        //        {
-        //            ComboCounter = 0;
-        //        }
-        //    }
+        //    anim.runtimeAnimatorController = combo.ComboController;
+        //    anim.SetBool("Attack", true);
+        //    Debug.Log("Playing");
         //}
-        if(token.IsCancellationRequested)
+        if(Time.time - LastClickedTime > 0.2f && ComboCounter <= ComboOverrides.Count)
         {
-            return;
-        }
-        anim.Play("Attack");
-        await Task.Delay(5000);
-    }
-    private async Task Combo()
-    {
-        Task AttackTask1 = Attack(Actions[0], token.Token);
-        Task AttackTask2 = Attack(Actions[1], token.Token);
-        Task AttackTask3 = Attack(Actions[2], token.Token);
-        //for (int i = 0; i < Actions.Count; i++)
-        //{
-        //    AttackTasks = Attack(Actions[i]);
-        //}
-        if (token.IsCancellationRequested)
-        {
-            return;
-        }
-        if (token.IsCancellationRequested)
-        {
-            Debug.Log("Task was cancelled");
-        }
-        if (Time.time - LastClickedTime >= 0.1f)
-        {
-            await AttackTask1;
-            await AttackTask2;
-            await AttackTask3;
-            LastClickedTime = Time.time;
-        }
-        else
-        {
-            token.Cancel();
+            AnimatorStateInfo currentState = anim.GetCurrentAnimatorStateInfo(0);
+            if (currentState.IsName("Attack1") && currentState.normalizedTime < 1.0f)
+            {
+                // Animation is currently playing, do nothing
+                return;
+            }
+            CancelInvoke("EndCombo");
+            if (Time.time - LastClickedTime >= 0.1f)
+            {
+                anim.runtimeAnimatorController = ComboOverrides[ComboCounter].ComboController;
+                anim.Play("Attack1", 0, 0);
+                ComboCounter++;
+                LastClickedTime = Time.time;
+                if (ComboCounter+1 > ComboOverrides.Count)
+                {
+                    ComboCounter = 0;
+                }
+            }
         }
     }
     private void ExitAttack()
     {
-        //if (AttackAnim.GetCurrentAnimatorStateInfo(0).normalizedTime > 0.95 && AttackAnim.GetCurrentAnimatorStateInfo(0).IsTag("Attack"))
-        //{
-        //    Invoke("EndCombo", 0.2f);
-        //}
+        if (anim.GetCurrentAnimatorStateInfo(0).normalizedTime > 0.9f && anim.GetCurrentAnimatorStateInfo(0).IsTag("Attack"))
+        {
+            Invoke("EndCombo", 0.2f);
+        }
     }
     private void EndCombo()
     {
-        //ComboCounter = 0;
-        //LastComboEnd = Time.time;
+        ComboCounter = 0;
+        LastClickedTime = Time.time;
     }
 }

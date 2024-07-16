@@ -421,6 +421,22 @@ PrefabInstance:
       propertyPath: Actions.Array.data[2]
       value: 
       objectReference: {fileID: 11400000, guid: 6ca407326d6ec7244b03403333d08e5d, type: 2}
+    - target: {fileID: 2077308905857684875, guid: cac48078708d0094ab828cb4ee315dc5, type: 3}
+      propertyPath: ComboOverrides.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2077308905857684875, guid: cac48078708d0094ab828cb4ee315dc5, type: 3}
+      propertyPath: ComboOverrides.Array.data[0]
+      value: 
+      objectReference: {fileID: 11400000, guid: 2f1956ae3bbf87d4e9b6d885e20627d7, type: 2}
+    - target: {fileID: 2077308905857684875, guid: cac48078708d0094ab828cb4ee315dc5, type: 3}
+      propertyPath: ComboOverrides.Array.data[1]
+      value: 
+      objectReference: {fileID: 11400000, guid: f3436fc03adb09d48addb63e51a45506, type: 2}
+    - target: {fileID: 2077308905857684875, guid: cac48078708d0094ab828cb4ee315dc5, type: 3}
+      propertyPath: ComboOverrides.Array.data[2]
+      value: 
+      objectReference: {fileID: 11400000, guid: 72fc8e9e4835b984f9ae80d4034af1f2, type: 2}
     - target: {fileID: 3755859538663515944, guid: cac48078708d0094ab828cb4ee315dc5, type: 3}
       propertyPath: m_IsActive
       value: 1

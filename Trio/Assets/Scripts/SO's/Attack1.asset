@@ -9,8 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 780897bb5a0adde4f85490fc4b7697f1, type: 3}
-  m_Name: Attack 1
+  m_Script: {fileID: 11500000, guid: 990224c64091b32468f4c11b4fef2a76, type: 3}
+  m_Name: Attack1
   m_EditorClassIdentifier: 
-  animatorOverrideController: {fileID: 22100000, guid: 070b06ff345c899419d90b1af0e1443e, type: 2}
-  Damage: 5
+  ComboController: {fileID: 22100000, guid: 9841f8f2f7bea054a991842893ab90c7, type: 2}
+  Damage: 0
