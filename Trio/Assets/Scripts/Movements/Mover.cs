@@ -34,6 +34,7 @@ public class Mover : MonoBehaviour
     private int AttackCounter;
     [SerializeField]
     private List<AnimationSO> ComboOverrides;
+    private bool canMove = true;
     #endregion
 
     #region Public Variables
@@ -59,11 +60,11 @@ public class Mover : MonoBehaviour
         {
             Flip();
         }
-        else if(isFacingRight && InputAxis.x < 0)
+        else if (isFacingRight && InputAxis.x < 0)
         {
             Flip();
         }
-        if(rb.velocity.x != 0)
+        if (rb.velocity.x != 0)
         {
             isRunning = true;
         }
@@ -72,7 +73,7 @@ public class Mover : MonoBehaviour
             isRunning = false;
         }
         GroundChecker();
-        if (Input.GetKeyDown(KeyCode.LeftControl))
+        if (inputActions.Player.Attack.IsPressed())
         {
             Attack();
         }
@@ -81,6 +82,14 @@ public class Mover : MonoBehaviour
         //    anim.SetBool("Attack", false);
         //}
         ExitAttack();
+        if (inputActions.Player.Roll.IsPressed())
+        {
+            DodgeRoll();
+        }
+        else
+        {
+            anim.SetBool("Roll", false);
+        }
     }
     private void FixedUpdate()
     {
@@ -89,9 +98,12 @@ public class Mover : MonoBehaviour
     }
     private void Move()
     {
-        InputAxis = inputActions.Player.Mover.ReadValue<Vector2>();
-        rb.velocity = new Vector2(InputAxis.x * MoveSpeed, rb.velocity.y);
-        anim.SetBool("isRunning", isRunning);
+        if (canMove)
+        {
+            InputAxis = inputActions.Player.Mover.ReadValue<Vector2>();
+            rb.velocity = new Vector2(InputAxis.x * MoveSpeed, rb.velocity.y);
+            anim.SetBool("isRunning", isRunning);
+        }
     }
     private void Jump()
     {
@@ -147,6 +159,10 @@ public class Mover : MonoBehaviour
                 }
             }
         }
+    }
+    private void DodgeRoll()
+    {
+        anim.SetBool("Roll", true);
     }
     private void ExitAttack()
     {
