@@ -152,7 +152,7 @@ public class Mover : MonoBehaviour
     {
         if (anim.GetCurrentAnimatorStateInfo(0).normalizedTime > 0.9f && anim.GetCurrentAnimatorStateInfo(0).IsTag("Attack"))
         {
-            Invoke("EndCombo", 0.2f);
+            Invoke("EndCombo", 1f);
         }
     }
     private void EndCombo()
