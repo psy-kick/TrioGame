@@ -14,16 +14,16 @@ public class Mover : MonoBehaviour
     private InputActions inputActions;
     private Rigidbody2D rb;
     [SerializeField]
-    private float MoveSpeed;
+    private float MoveSpeed = 5f;
     [SerializeField]
-    private float JumpHeight;
+    private float JumpHeight = 15f;
     [SerializeField]
     private Transform Groundcheck;
     [SerializeField]
     private LayerMask GroundLayer;
     private bool isGrounded = false;
     [SerializeField]
-    private float GroundCheckRadius;
+    private float GroundCheckRadius = 0.3f;
     private bool isFacingRight = true;
     private Vector2 InputAxis;
     private Animator anim;
@@ -35,6 +35,11 @@ public class Mover : MonoBehaviour
     [SerializeField]
     private List<AnimationSO> ComboOverrides;
     private bool canMove = true;
+    private bool canJump = true;
+    private bool canFlip = true;
+    [SerializeField]
+    private float RollSpeed = 5f;
+    private int FacingDirection = 1;
     #endregion
 
     #region Public Variables
@@ -82,7 +87,7 @@ public class Mover : MonoBehaviour
         //    anim.SetBool("Attack", false);
         //}
         ExitAttack();
-        if (inputActions.Player.Roll.IsPressed())
+        if (inputActions.Player.Roll.IsPressed() && isGrounded)
         {
             DodgeRoll();
         }
@@ -107,7 +112,7 @@ public class Mover : MonoBehaviour
     }
     private void Jump()
     {
-        if (inputActions.Player.Jump.IsPressed() && isGrounded)
+        if (inputActions.Player.Jump.IsPressed() && isGrounded && canJump)
         {
             rb.velocity = new Vector2(rb.velocity.x, JumpHeight);
             anim.SetBool("Jump", true);
@@ -125,10 +130,13 @@ public class Mover : MonoBehaviour
     }
     private void Flip()
     {
-        isFacingRight = !isFacingRight;
-        Vector3 LocalScale = transform.localScale;
-        LocalScale.x *= -1f;
-        transform.localScale = LocalScale;
+        if (canFlip)
+        {
+            isFacingRight = !isFacingRight;
+            Vector3 LocalScale = transform.localScale;
+            LocalScale.x *= -1f;
+            transform.localScale = LocalScale;
+        }
     }
     private void Attack()
     {
@@ -163,6 +171,7 @@ public class Mover : MonoBehaviour
     private void DodgeRoll()
     {
         anim.SetBool("Roll", true);
+        rb.velocity = new Vector2(RollSpeed * transform.localScale.x, rb.velocity.y);
     }
     private void ExitAttack()
     {
@@ -176,4 +185,30 @@ public class Mover : MonoBehaviour
         ComboCounter = 0;
         LastClickedTime = Time.time;
     }
+    #region Anim Event trigger methods
+    public void AnimMoverEvent()
+    {
+        canMove = true;
+    }
+    public void StopMoverEvent()
+    {
+        canMove = false;
+    }
+    public void AnimJumpEvent()
+    {
+        canJump = true;
+    }
+    public void StopJumpEvent()
+    {
+        canJump = false;
+    }
+    public void AnimFlipEvent()
+    {
+        canFlip = true;
+    }
+    public void StopFlipEvent()
+    {
+        canFlip = false;
+    }
+    #endregion
 }
