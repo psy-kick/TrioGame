@@ -366,6 +366,10 @@ PrefabInstance:
       value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 2077308905857684875, guid: cac48078708d0094ab828cb4ee315dc5, type: 3}
+      propertyPath: RollSpeed
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 2077308905857684875, guid: cac48078708d0094ab828cb4ee315dc5, type: 3}
       propertyPath: JumpHeight
       value: 15
       objectReference: {fileID: 0}
