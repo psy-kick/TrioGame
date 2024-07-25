@@ -39,7 +39,6 @@ public class Mover : MonoBehaviour
     private bool canFlip = true;
     [SerializeField]
     private float RollSpeed = 5f;
-    private int FacingDirection = 1;
     #endregion
 
     #region Public Variables
@@ -140,12 +139,6 @@ public class Mover : MonoBehaviour
     }
     private void Attack()
     {
-        //foreach(var combo in ComboOverrides)
-        //{
-        //    anim.runtimeAnimatorController = combo.ComboController;
-        //    anim.SetBool("Attack", true);
-        //    Debug.Log("Playing");
-        //}
         if(Time.time - LastClickedTime > 0.2f && ComboCounter <= ComboOverrides.Count)
         {
             AnimatorStateInfo currentState = anim.GetCurrentAnimatorStateInfo(0);
