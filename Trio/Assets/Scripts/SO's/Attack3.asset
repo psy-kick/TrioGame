@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: Attack3
   m_EditorClassIdentifier: 
   ComboController: {fileID: 22100000, guid: db235c09dccd1c94e85b1fe83b156139, type: 2}
-  Damage: 0
+  Damage: 30
