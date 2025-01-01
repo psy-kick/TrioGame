@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class EnemyBase : MonoBehaviour, IMoveable, ITriggerCheckable
 {
+    #region Private Variables
     [SerializeField]
     private GameObject PatrolA;
     [SerializeField]
@@ -13,17 +14,19 @@ public class EnemyBase : MonoBehaviour, IMoveable, ITriggerCheckable
     [SerializeField]
     private float speed;
     private Animator anim;
-    public bool isPatrolling;
     [SerializeField]
     private List<GameObject> PatrolPoints;
+    #endregion
 
+    #region Public Variables
+    public bool isPatrolling;
     public EnemyStateMachine enemyStateMachine {  get; set; }
     public EnemyAttack enemyAttack { get; set; }
-
     public bool isFacingRight { get; set; } = false;
     public Rigidbody2D rb { get; set; }
     public bool isTriggered { get; set; }
     public bool isInRange { get; set; }
+    #endregion
 
     public enum AnimTriggers
     {
@@ -54,6 +57,7 @@ public class EnemyBase : MonoBehaviour, IMoveable, ITriggerCheckable
         {
             isPatrolling = false;
         }
+        Debug.Log(isTriggered);
     }
     private void UpdateAnims()
     {
@@ -131,5 +135,6 @@ public class EnemyBase : MonoBehaviour, IMoveable, ITriggerCheckable
     public void SetStrikingDistance(bool issInRange)
     {
         isInRange = issInRange;
+        Debug.Log("this happens");
     }
 }

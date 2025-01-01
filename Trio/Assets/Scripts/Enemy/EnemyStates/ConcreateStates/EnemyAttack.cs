@@ -30,8 +30,8 @@ public class EnemyAttack : EnemyStates
         base.FrameUpdate();
         if (enemyBase.isTriggered)
         {
-            //enemyStateMachine.ChangeState(enemyBase.enemyAttack);
-            //Debug.Log("Attack");
+            enemyStateMachine.ChangeState(enemyBase.enemyAttack);
+            Debug.Log("Attack");
             enemyBase.Move(Vector2.zero);
         }
     }

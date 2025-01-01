@@ -13,7 +13,7 @@ public class EnemyAgroCheck : MonoBehaviour
     private void Awake()
     {
         PlayerTarget = GameObject.FindGameObjectWithTag("Player");
-        enemy = GetComponent<EnemyBase>();
+        enemy = FindAnyObjectByType<EnemyBase>();
     }
     private void OnTriggerEnter2D(Collider2D collision)
     {
