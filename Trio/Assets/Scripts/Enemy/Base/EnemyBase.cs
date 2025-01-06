@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyBase : MonoBehaviour, IMoveable, ITriggerCheckable
+public class EnemyBase : MonoBehaviour, IMoveable, ITriggerCheckable, IDamageable
 {
     #region Private Variables
     [SerializeField]
@@ -26,6 +26,7 @@ public class EnemyBase : MonoBehaviour, IMoveable, ITriggerCheckable
     public Rigidbody2D rb { get; set; }
     public bool isTriggered { get; set; }
     public bool isInRange { get; set; }
+    public float damage {  get; set; }
     #endregion
 
     public enum AnimTriggers
@@ -136,5 +137,10 @@ public class EnemyBase : MonoBehaviour, IMoveable, ITriggerCheckable
     {
         isInRange = issInRange;
         Debug.Log("this happens");
+    }
+
+    public void TakeDamage(float DamageAmount)
+    {
+        damage = DamageAmount;
     }
 }

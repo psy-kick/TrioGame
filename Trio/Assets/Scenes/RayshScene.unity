@@ -593,10 +593,10 @@ MonoBehaviour:
   PatrolA: {fileID: 190279777}
   PatrolB: {fileID: 1508076123}
   speed: 5
-  isPatrolling: 0
   PatrolPoints:
   - {fileID: 1508076123}
   - {fileID: 190279777}
+  isPatrolling: 0
 --- !u!1 &1508076123
 GameObject:
   m_ObjectHideFlags: 0
@@ -906,6 +906,10 @@ PrefabInstance:
       propertyPath: ComboOverrides.Array.data[2]
       value: 
       objectReference: {fileID: 11400000, guid: 72fc8e9e4835b984f9ae80d4034af1f2, type: 2}
+    - target: {fileID: 2995235317059047600, guid: cac48078708d0094ab828cb4ee315dc5, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3755859538663515944, guid: cac48078708d0094ab828cb4ee315dc5, type: 3}
       propertyPath: m_IsActive
       value: 1
@@ -913,6 +917,18 @@ PrefabInstance:
     - target: {fileID: 3755859538663515944, guid: cac48078708d0094ab828cb4ee315dc5, type: 3}
       propertyPath: m_TagString
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 4226441839156218062, guid: cac48078708d0094ab828cb4ee315dc5, type: 3}
+      propertyPath: m_Size.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4226441839156218062, guid: cac48078708d0094ab828cb4ee315dc5, type: 3}
+      propertyPath: m_Offset.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4226441839156218062, guid: cac48078708d0094ab828cb4ee315dc5, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4749375781195060132, guid: cac48078708d0094ab828cb4ee315dc5, type: 3}
       propertyPath: m_LocalPosition.y
@@ -965,6 +981,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1908099251740899065, guid: cac48078708d0094ab828cb4ee315dc5, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2996759617235856039}
+    - targetCorrespondingSourceObject: {fileID: 1908099251740899065, guid: cac48078708d0094ab828cb4ee315dc5, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2996759617235856043}
   m_SourcePrefab: {fileID: 100100000, guid: cac48078708d0094ab828cb4ee315dc5, type: 3}
 --- !u!1 &2996759617235856038 stripped
 GameObject:
@@ -992,6 +1011,27 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!320 &2996759617235856043
+PlayableDirector:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2996759617235856038}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_PlayableAsset: {fileID: 11400000, guid: 7572e2179ec713946ba5bad39983bea6, type: 2}
+  m_InitialState: 0
+  m_WrapMode: 2
+  m_DirectorUpdateMode: 1
+  m_InitialTime: 0
+  m_SceneBindings:
+  - key: {fileID: -6483673925271608670, guid: 7572e2179ec713946ba5bad39983bea6, type: 2}
+    value: {fileID: 2996759617235856039}
+  - key: {fileID: -6238379051113280575, guid: 7572e2179ec713946ba5bad39983bea6, type: 2}
+    value: {fileID: 2996759617235856039}
+  m_ExposedReferences:
+    m_References: []
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

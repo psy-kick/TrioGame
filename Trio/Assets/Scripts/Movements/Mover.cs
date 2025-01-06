@@ -172,6 +172,7 @@ public class Mover : MonoBehaviour
         ComboCounter = 0;
         LastClickedTime = Time.time;
     }
+
     #region Anim Event trigger methods
     public void AnimMoverEvent()
     {
