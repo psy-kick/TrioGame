@@ -109,7 +109,7 @@ public class EnemyBase : MonoBehaviour, IMoveable, ITriggerCheckable, IDamageabl
     public void Move(Vector2 velocity)
     {
         CheckFacing(velocity);
-        rb.velocity = velocity;
+        rb.linearVelocity = velocity;
     }
 
     public void CheckFacing(Vector2 velocity)
