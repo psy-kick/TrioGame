@@ -1,13 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Threading;
-using System.Threading.Tasks;
-using Unity.Burst.Intrinsics;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.InputSystem;
 public class Mover : MonoBehaviour
 {
     #region Private Variables
@@ -69,7 +62,7 @@ public class Mover : MonoBehaviour
         {
             Flip();
         }
-        if (rb.velocity.x != 0)
+        if (rb.linearVelocity.x != 0)
         {
             isRunning = true;
         }
@@ -106,7 +99,7 @@ public class Mover : MonoBehaviour
         if (canMove)
         {
             InputAxis = inputActions.Player.Mover.ReadValue<Vector2>();
-            rb.velocity = new Vector2(InputAxis.x * MoveSpeed, rb.velocity.y);
+            rb.linearVelocity = new Vector2(InputAxis.x * MoveSpeed, rb.linearVelocity.y);
             anim.SetBool("isRunning", isRunning);
         }
     }
@@ -114,13 +107,13 @@ public class Mover : MonoBehaviour
     {
         if (inputActions.Player.Jump.IsPressed() && isGrounded && canJump)
         {
-            rb.velocity = new Vector2(rb.velocity.x, JumpHeight);
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, JumpHeight);
             anim.SetBool("Jump", true);
-            anim.SetFloat("yVel", rb.velocity.y);
+            anim.SetFloat("yVel", rb.linearVelocity.y);
         }
         else
         {
-            anim.SetFloat("yVel", rb.velocity.y);
+            anim.SetFloat("yVel", rb.linearVelocity.y);
             anim.SetBool("Jump", false);
         }
     }
@@ -171,7 +164,7 @@ public class Mover : MonoBehaviour
     private void DodgeRoll()
     {
         anim.SetBool("Roll", true);
-        rb.velocity = new Vector2(RollSpeed * transform.localScale.x, rb.velocity.y);
+        rb.linearVelocity = new Vector2(RollSpeed * transform.localScale.x, rb.linearVelocity.y);
     }
     private void ExitAttack()
     {
