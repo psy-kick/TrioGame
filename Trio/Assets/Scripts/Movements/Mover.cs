@@ -33,6 +33,7 @@ public class Mover : MonoBehaviour,IMoveable,IDamageable
     private float RollSpeed = 5f;
     [SerializeField]
     private float Health = 100f;
+    private bool canRoll = true;
 
     Rigidbody2D IMoveable.rb { get => rb; set => rb = value; }
     bool IMoveable.isFacingRight { get => isFacingRight; set => isFacingRight = value; }
@@ -88,7 +89,7 @@ public class Mover : MonoBehaviour,IMoveable,IDamageable
         ExitAttack();
         if (inputActions.Player.Roll.WasPerformedThisFrame() && isGrounded)
         {
-            DodgeRoll();
+            DodgeRoll();                
         }
         else if(inputActions.Player.Roll.WasReleasedThisFrame())
         {
@@ -179,9 +180,12 @@ public class Mover : MonoBehaviour,IMoveable,IDamageable
     }
     private void DodgeRoll()
     {
-        anim.SetBool("Roll", true);
-        rb.linearVelocity = new Vector2(RollSpeed * transform.localScale.x, rb.linearVelocity.y);
-        Invoke(nameof(StopRoll), 0.1f);
+        if (canRoll)
+        {
+            anim.SetBool("Roll", true);
+            rb.linearVelocity = new Vector2(RollSpeed * transform.localScale.x, rb.linearVelocity.y);
+            Invoke(nameof(StopRoll), 0.1f);
+        }
     }
 
     private void StopRoll()
@@ -230,6 +234,15 @@ public class Mover : MonoBehaviour,IMoveable,IDamageable
     public void StopFlipEvent()
     {
         canFlip = false;
+    }
+    public void RollEvent()
+    {
+        canRoll = true;
+    }
+    public void StopRollingEvent()
+    {
+        canRoll = false;
+        Debug.Log(canRoll);
     }
     #endregion
 }

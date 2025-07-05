@@ -17,7 +17,7 @@ public class EnemyAttack : EnemyStates
     public override void EnterState()
     {
         base.EnterState();
-        Debug.Log("EnteredAttack");
+        //Debug.Log("EnteredAttack");
     }
 
     public override void ExitState()
@@ -31,7 +31,7 @@ public class EnemyAttack : EnemyStates
         if (enemyBase.isTriggered)
         {
             enemyStateMachine.ChangeState(enemyBase.enemyAttack);
-            Debug.Log("Attack");
+            //Debug.Log("Attack");
             enemyBase.Move(Vector2.zero);
         }
     }
