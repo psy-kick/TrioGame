@@ -115,6 +115,13 @@ AnimationClip:
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
+  - time: 0
+    functionName: StopRollingEvent
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
   - time: 0.7692308
     functionName: AnimMoverEvent
     data: 
@@ -131,6 +138,13 @@ AnimationClip:
     messageOptions: 0
   - time: 0.7692308
     functionName: AnimFlipEvent
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
+  - time: 0.7692308
+    functionName: RollEvent
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
