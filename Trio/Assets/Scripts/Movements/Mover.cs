@@ -1,7 +1,6 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-public class Mover : MonoBehaviour
+public class Mover : MonoBehaviour,IMoveable,IDamageable
 {
     #region Private Variables
     private InputActions inputActions;
@@ -32,7 +31,13 @@ public class Mover : MonoBehaviour
     private bool canFlip = true;
     [SerializeField]
     private float RollSpeed = 5f;
-    private int FacingDirection = 1;
+    [SerializeField]
+    private float Health = 100f;
+
+    Rigidbody2D IMoveable.rb { get => rb; set => rb = value; }
+    bool IMoveable.isFacingRight { get => isFacingRight; set => isFacingRight = value; }
+    public bool JumpInput { get; private set; }
+    public float damage { get; set; }
     #endregion
 
     #region Public Variables
@@ -54,14 +59,15 @@ public class Mover : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-        if (!isFacingRight && InputAxis.x > 0)
-        {
-            Flip();
-        }
-        else if (isFacingRight && InputAxis.x < 0)
-        {
-            Flip();
-        }
+        //if (!isFacingRight && InputAxis.x > 0)
+        //{
+        //    Flip();
+        //}
+        //else if (isFacingRight && InputAxis.x < 0)
+        //{
+        //    Flip();
+        //}
+        CheckFacing(InputAxis);
         if (rb.linearVelocity.x != 0)
         {
             isRunning = true;
@@ -80,32 +86,48 @@ public class Mover : MonoBehaviour
         //    anim.SetBool("Attack", false);
         //}
         ExitAttack();
-        if (inputActions.Player.Roll.IsPressed() && isGrounded)
+        if (inputActions.Player.Roll.WasPerformedThisFrame() && isGrounded)
         {
             DodgeRoll();
         }
-        else
+        else if(inputActions.Player.Roll.WasReleasedThisFrame())
         {
             anim.SetBool("Roll", false);
         }
     }
     private void FixedUpdate()
     {
-        Jump();
-        Move();
+        JumpInput = inputActions.Player.Jump.IsPressed();
+        Jump(JumpInput);
+        Move(InputAxis);
     }
-    private void Move()
+
+    public void Move(Vector2 velocity)
     {
         if (canMove)
         {
             InputAxis = inputActions.Player.Mover.ReadValue<Vector2>();
             rb.linearVelocity = new Vector2(InputAxis.x * MoveSpeed, rb.linearVelocity.y);
+            isRunning = velocity.x != 0;
             anim.SetBool("isRunning", isRunning);
         }
     }
-    private void Jump()
+
+    public void CheckFacing(Vector2 velocity)
     {
-        if (inputActions.Player.Jump.IsPressed() && isGrounded && canJump)
+        if (velocity.x > 0 && !isFacingRight)
+        {
+            Flip();
+        }
+
+        else if (velocity.x < 0 && isFacingRight)
+        {
+            Flip();
+        }
+    }
+    public void Jump(bool JumpRequested)
+    {
+        if (JumpRequested && isGrounded && canJump)
         {
             rb.linearVelocity = new Vector2(rb.linearVelocity.x, JumpHeight);
             anim.SetBool("Jump", true);
@@ -133,12 +155,6 @@ public class Mover : MonoBehaviour
     }
     private void Attack()
     {
-        //foreach(var combo in ComboOverrides)
-        //{
-        //    anim.runtimeAnimatorController = combo.ComboController;
-        //    anim.SetBool("Attack", true);
-        //    Debug.Log("Playing");
-        //}
         if(Time.time - LastClickedTime > 0.2f && ComboCounter <= ComboOverrides.Count)
         {
             AnimatorStateInfo currentState = anim.GetCurrentAnimatorStateInfo(0);
@@ -165,7 +181,14 @@ public class Mover : MonoBehaviour
     {
         anim.SetBool("Roll", true);
         rb.linearVelocity = new Vector2(RollSpeed * transform.localScale.x, rb.linearVelocity.y);
+        Invoke(nameof(StopRoll), 0.1f);
     }
+
+    private void StopRoll()
+    {
+        anim.SetBool("Roll", false);
+    }
+
     private void ExitAttack()
     {
         if (anim.GetCurrentAnimatorStateInfo(0).normalizedTime > 0.9f && anim.GetCurrentAnimatorStateInfo(0).IsTag("Attack"))
@@ -177,6 +200,11 @@ public class Mover : MonoBehaviour
     {
         ComboCounter = 0;
         LastClickedTime = Time.time;
+    }
+    public void TakeDamage(float DamageAmount)
+    {
+        damage = DamageAmount;
+        float RemainingHealth = Health - damage;
     }
     #region Anim Event trigger methods
     public void AnimMoverEvent()
