@@ -1,5 +1,3 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -142,5 +140,10 @@ public class EnemyBase : MonoBehaviour, IMoveable, ITriggerCheckable, IDamageabl
     public void TakeDamage(float DamageAmount)
     {
         damage = DamageAmount;
+    }
+
+    public void Jump(bool JumpRequested)
+    {
+        //Dont implement for now
     }
 }

@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public interface IMoveable
@@ -8,4 +6,5 @@ public interface IMoveable
     bool isFacingRight { get; set; }
     void Move(Vector2 velocity);
     void CheckFacing(Vector2 velocity);
+    void Jump(bool JumpRequested);
 }
