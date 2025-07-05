@@ -242,7 +242,6 @@ public class Mover : MonoBehaviour,IMoveable,IDamageable
     public void StopRollingEvent()
     {
         canRoll = false;
-        Debug.Log(canRoll);
     }
     #endregion
 }
